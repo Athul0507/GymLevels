@@ -1,0 +1,77 @@
+{
+  "routineName": "Beginner Strength Week",
+  "exercises": [
+    {
+      "name": "Goblet Squat",
+      "day": "Monday",
+      "sets": 3,
+      "reps": "8-12",
+      "cue": "Control depth and drive through mid-foot.",
+      "videoUrl": "https://www.youtube.com/results?search_query=goblet+squat+proper+form",
+      "muscleGroup": "quads, glutes, core"
+    },
+    {
+      "name": "Bench Press",
+      "day": "Monday",
+      "sets": 3,
+      "reps": "6-10",
+      "cue": "Lock shoulder blades and keep a smooth bar path.",
+      "videoUrl": "https://www.youtube.com/results?search_query=bench+press+proper+form",
+      "muscleGroup": "chest, triceps, shoulders"
+    },
+    {
+      "name": "Lat Pulldown",
+      "day": "Wednesday",
+      "sets": 3,
+      "reps": "10-12",
+      "cue": "Pull elbows down and pause near the upper chest.",
+      "videoUrl": "https://www.youtube.com/results?search_query=lat+pulldown+proper+form",
+      "muscleGroup": "back, biceps"
+    },
+    {
+      "name": "Romanian Deadlift",
+      "day": "Wednesday",
+      "sets": 3,
+      "reps": "8-10",
+      "cue": "Push hips back and keep a neutral spine.",
+      "videoUrl": "https://www.youtube.com/results?search_query=romanian+deadlift+proper+form",
+      "muscleGroup": "hamstrings, glutes, back"
+    },
+    {
+      "name": "Seated Row",
+      "day": "Friday",
+      "sets": 3,
+      "reps": "10-12",
+      "cue": "Sit tall and squeeze shoulder blades together.",
+      "videoUrl": "https://www.youtube.com/results?search_query=seated+row+proper+form",
+      "muscleGroup": "back, biceps"
+    },
+    {
+      "name": "Overhead Press",
+      "day": "Friday",
+      "sets": 3,
+      "reps": "6-10",
+      "cue": "Brace hard and finish with arms overhead.",
+      "videoUrl": "https://www.youtube.com/results?search_query=overhead+press+proper+form",
+      "muscleGroup": "shoulders, triceps, core"
+    },
+    {
+      "name": "Leg Press",
+      "day": "Saturday",
+      "sets": 3,
+      "reps": "10-15",
+      "cue": "Let knees track over toes without locking out hard.",
+      "videoUrl": "https://www.youtube.com/results?search_query=leg+press+proper+form",
+      "muscleGroup": "quads, glutes, hamstrings"
+    },
+    {
+      "name": "Plank",
+      "day": "Saturday",
+      "sets": 3,
+      "reps": "30-45 sec",
+      "cue": "Keep ribs down and breathe steadily.",
+      "videoUrl": "https://www.youtube.com/results?search_query=plank+proper+form",
+      "muscleGroup": "core, shoulders"
+    }
+  ]
+}

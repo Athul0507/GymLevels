@@ -1,0 +1,8 @@
+<resources>
+    <color name="gl_black">#07080C</color>
+    <color name="gl_panel">#11131A</color>
+    <color name="gl_white">#F7F8FA</color>
+    <color name="gl_lime">#B7FF2A</color>
+    <color name="gl_cyan">#30D5FF</color>
+    <color name="gl_red">#FF3B5C</color>
+</resources>
