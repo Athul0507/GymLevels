@@ -1,0 +1,7 @@
+Gym equipment model:
+Downloaded from filer.dev free GLB listing.
+Source: https://filer.dev/pa-IN/3d-model/20172356-simulator-gym-n.glb
+
+Note:
+The Record Activity renderer uses a local WebGL scene for realistic interactive barbell and plate rendering.
+The gym equipment GLB is retained as a reference asset for future model replacement.

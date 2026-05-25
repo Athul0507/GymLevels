@@ -1,0 +1,11 @@
+com.gymlevels.app:mipmap/ic_launcher_round = 0x7f030001
+com.gymlevels.app:mipmap/ic_launcher = 0x7f030000
+com.gymlevels.app:color/launcher_icon_background = 0x7f010006
+com.gymlevels.app:color/gl_white = 0x7f010005
+com.gymlevels.app:style/AppTheme = 0x7f040000
+com.gymlevels.app:color/gl_panel = 0x7f010003
+com.gymlevels.app:color/gl_cyan = 0x7f010001
+com.gymlevels.app:color/gl_red = 0x7f010004
+com.gymlevels.app:color/gl_lime = 0x7f010002
+com.gymlevels.app:drawable/ic_launcher_foreground = 0x7f020000
+com.gymlevels.app:color/gl_black = 0x7f010000

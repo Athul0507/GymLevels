@@ -1,0 +1,309 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 18%, #123d38 0, #071211 48%, #020505 100%);
+      color: #f5fffc;
+      font-family: system-ui, sans-serif;
+      touch-action: none;
+    }
+    canvas { position: fixed; inset: 0; width: 100%; height: 100%; }
+    #hud {
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      pointer-events: none;
+    }
+    .panel {
+      border: 1px solid rgba(0, 226, 167, .28);
+      border-radius: 16px;
+      padding: 9px 12px;
+      background: rgba(2, 7, 7, .58);
+      box-shadow: 0 12px 40px rgba(0, 226, 167, .12);
+      backdrop-filter: blur(12px);
+    }
+    .kicker {
+      color: rgba(245,255,252,.58);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .12em;
+    }
+    .value {
+      color: #00e2a7;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: .02em;
+    }
+    #hint {
+      position: fixed;
+      left: 16px;
+      top: 14px;
+      color: rgba(245,255,252,.62);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+  </style>
+  <script src="three.min.js"></script>
+</head>
+<body>
+  <canvas id="scene"></canvas>
+  <div id="hint">Drag to rotate</div>
+  <div id="hud">
+    <div class="panel">
+      <div class="kicker">Record Activity</div>
+      <div class="value" id="total">0 KG</div>
+    </div>
+    <div class="panel">
+      <div class="kicker">Loaded Plates</div>
+      <div class="value" id="plateCount">0</div>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const total = params.get("total") || "0";
+    const mode = params.get("mode") || "barbell";
+    const plates = parsePlates(params.get("plates") || "");
+    document.getElementById("total").textContent = `${total} KG`;
+    document.querySelector("#hud .kicker").textContent = mode === "dumbbell" ? "Per Dumbbell" : "Record Activity";
+    document.getElementById("plateCount").textContent = plates.reduce((sum, p) => sum + p.count * (mode === "dumbbell" ? 4 : 2), 0);
+
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("scene"), antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.01, 1000);
+    camera.position.set(0, 1.05, 9.2);
+
+    scene.add(new THREE.HemisphereLight(0xcffff4, 0x03100e, 1.4));
+    const key = new THREE.DirectionalLight(0xffffff, 1.8);
+    key.position.set(3, 4, 4);
+    scene.add(key);
+    const rim = new THREE.DirectionalLight(0x00e2a7, 2.5);
+    rim.position.set(-4, 2, -3);
+    scene.add(rim);
+
+    const rig = new THREE.Group();
+    scene.add(rig);
+    const chrome = new THREE.MeshStandardMaterial({ color: 0xc8d2d0, metalness: .86, roughness: .22 });
+    const darkChrome = new THREE.MeshStandardMaterial({ color: 0x556260, metalness: .78, roughness: .28 });
+    const rubberDark = new THREE.MeshStandardMaterial({ color: 0x111817, metalness: .12, roughness: .58 });
+    const neon = new THREE.MeshStandardMaterial({ color: 0x00e2a7, emissive: 0x009b72, emissiveIntensity: .8, roughness: .34, metalness: .1 });
+
+    if (mode === "dumbbell") buildDumbbells();
+    else buildBarbell();
+    buildFloor();
+
+    let rotation = -0.35;
+    let targetRotation = -0.35;
+    let spinVelocity = 0;
+    let dragging = false;
+    let lastX = 0;
+
+    function parsePlates(input) {
+      return input.split(",").map(item => {
+        const [weight, count, color] = item.split(":");
+        return { weight: Number(weight || 0), count: Number(count || 0), color: Number.parseInt(color || "00e2a7", 16) };
+      }).filter(p => p.weight > 0 && p.count > 0);
+    }
+
+    function buildBarbell() {
+      const shaft = cylinder(0.075, 4.7, chrome);
+      shaft.rotation.z = Math.PI / 2;
+      rig.add(shaft);
+      [-1, 1].forEach(side => {
+        const sleeve = cylinder(0.16, .82, chrome);
+        sleeve.rotation.z = Math.PI / 2;
+        sleeve.position.x = side * 2.35;
+        rig.add(sleeve);
+        const collar = cylinder(0.22, .12, darkChrome);
+        collar.rotation.z = Math.PI / 2;
+        collar.position.x = side * 1.9;
+        rig.add(collar);
+      });
+
+      let offset = 2.02;
+      plates.forEach(entry => {
+        const radius = .42 + entry.weight * .012;
+        const width = .085 + Math.min(entry.weight, 20) * .006;
+        const material = new THREE.MeshStandardMaterial({
+          color: entry.color,
+          emissive: entry.color === 0x00e2a7 ? 0x006b52 : 0x000000,
+          emissiveIntensity: .35,
+          roughness: .5,
+          metalness: .08
+        });
+        for (let i = 0; i < entry.count; i++) {
+          addPlate(-offset, radius, width, material, entry.weight);
+          addPlate(offset, radius, width, material, entry.weight);
+          offset += width + .035;
+        }
+      });
+
+      if (!plates.length) {
+        const ghost = new THREE.Mesh(new THREE.TorusGeometry(.42, .018, 24, 80), neon);
+        ghost.rotation.y = Math.PI / 2;
+        ghost.position.set(-2.1, 0, 0);
+        rig.add(ghost);
+        const ghost2 = ghost.clone();
+        ghost2.position.x = 2.1;
+        rig.add(ghost2);
+      }
+    }
+
+    function buildDumbbells() {
+      buildDumbbell(-0.62, -0.15, -0.18);
+      buildDumbbell(0.62, 0.15, 0.18);
+      if (!plates.length) {
+        [-0.62, 0.62].forEach(y => {
+          const ghost = new THREE.Mesh(new THREE.TorusGeometry(.34, .018, 24, 80), neon);
+          ghost.rotation.y = Math.PI / 2;
+          ghost.position.set(-0.78, y, 0);
+          rig.add(ghost);
+          const ghost2 = ghost.clone();
+          ghost2.position.x = 0.78;
+          rig.add(ghost2);
+        });
+      }
+    }
+
+    function buildDumbbell(y, z, twist) {
+      const handle = cylinder(0.07, 1.72, chrome);
+      handle.rotation.z = Math.PI / 2;
+      handle.position.set(0, y, z);
+      handle.rotation.y = twist;
+      rig.add(handle);
+
+      [-1, 1].forEach(side => {
+        const gripStop = cylinder(0.14, .08, darkChrome);
+        gripStop.rotation.z = Math.PI / 2;
+        gripStop.position.set(side * .58, y, z);
+        rig.add(gripStop);
+      });
+
+      let offset = .72;
+      plates.forEach(entry => {
+        const radius = .3 + entry.weight * .009;
+        const width = .055 + Math.min(entry.weight, 20) * .004;
+        const material = new THREE.MeshStandardMaterial({
+          color: entry.color,
+          emissive: entry.color === 0x00e2a7 ? 0x006b52 : 0x000000,
+          emissiveIntensity: .35,
+          roughness: .48,
+          metalness: .08
+        });
+        for (let i = 0; i < entry.count; i++) {
+          addDumbbellPlate(-offset, y, z, radius, width, material);
+          addDumbbellPlate(offset, y, z, radius, width, material);
+          offset += width + .035;
+        }
+      });
+
+      [-offset, offset].forEach(x => {
+        const cap = cylinder(.18, .08, darkChrome);
+        cap.rotation.z = Math.PI / 2;
+        cap.position.set(x, y, z);
+        rig.add(cap);
+      });
+    }
+
+    function addPlate(x, radius, width, material, label) {
+      const plate = cylinder(radius, width, material);
+      plate.rotation.z = Math.PI / 2;
+      plate.position.x = x;
+      rig.add(plate);
+
+      const bevel = new THREE.Mesh(new THREE.TorusGeometry(radius * .72, .025, 24, 96), rubberDark);
+      bevel.rotation.y = Math.PI / 2;
+      bevel.position.x = x + Math.sign(x) * (width / 2 + .004);
+      rig.add(bevel);
+
+      const hub = cylinder(radius * .24, width + .02, darkChrome);
+      hub.rotation.z = Math.PI / 2;
+      hub.position.x = x;
+      rig.add(hub);
+    }
+
+    function addDumbbellPlate(x, y, z, radius, width, material) {
+      const plate = cylinder(radius, width, material);
+      plate.rotation.z = Math.PI / 2;
+      plate.position.set(x, y, z);
+      rig.add(plate);
+
+      const bevel = new THREE.Mesh(new THREE.TorusGeometry(radius * .72, .02, 20, 72), rubberDark);
+      bevel.rotation.y = Math.PI / 2;
+      bevel.position.set(x + Math.sign(x) * (width / 2 + .004), y, z);
+      rig.add(bevel);
+
+      const hub = cylinder(radius * .24, width + .018, darkChrome);
+      hub.rotation.z = Math.PI / 2;
+      hub.position.set(x, y, z);
+      rig.add(hub);
+    }
+
+    function cylinder(radius, depth, material) {
+      return new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, depth, 64, 1, false), material);
+    }
+
+    function buildFloor() {
+      const grid = new THREE.GridHelper(8, 18, 0x00e2a7, 0x183734);
+      grid.position.y = -1.1;
+      grid.material.transparent = true;
+      grid.material.opacity = .28;
+      scene.add(grid);
+    }
+
+    function resize() {
+      const w = innerWidth;
+      const h = innerHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+
+    function animate() {
+      resize();
+      if (!dragging) {
+        targetRotation += spinVelocity;
+        spinVelocity *= .92;
+      }
+      rotation += (targetRotation - rotation) * .16;
+      rig.rotation.y = rotation;
+      rig.rotation.x = -0.08;
+      rig.scale.setScalar(1);
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    addEventListener("pointerdown", event => {
+      dragging = true;
+      lastX = event.clientX;
+      spinVelocity = 0;
+      event.preventDefault();
+    });
+    addEventListener("pointermove", event => {
+      if (!dragging) return;
+      const delta = (event.clientX - lastX) * .012;
+      targetRotation += delta;
+      spinVelocity = delta * .24;
+      lastX = event.clientX;
+      event.preventDefault();
+    });
+    addEventListener("pointerup", () => { dragging = false; });
+    addEventListener("touchmove", event => event.preventDefault(), { passive: false });
+  </script>
+</body>
+</html>

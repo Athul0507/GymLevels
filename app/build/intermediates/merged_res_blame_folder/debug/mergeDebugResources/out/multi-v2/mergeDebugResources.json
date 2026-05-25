@@ -1,0 +1,83 @@
+{
+    "logs": [
+        {
+            "outputFile": "C:\\Users\\ikuma\\.gradle\\daemon\\9.0-milestone-1\\com.gymlevels.app-debug-4:\\values_values.arsc.flat",
+            "map": [
+                {
+                    "source": "C:\\Users\\ikuma\\Documents\\gymlevels\\GymLevels\\app\\src\\main\\res\\values\\styles.xml",
+                    "from": {
+                        "startLines": "1",
+                        "startColumns": "4",
+                        "startOffsets": "17",
+                        "endLines": "7",
+                        "endColumns": "12",
+                        "endOffsets": "425"
+                    },
+                    "to": {
+                        "startLines": "8",
+                        "startColumns": "4",
+                        "startOffsets": "309",
+                        "endLines": "14",
+                        "endColumns": "12",
+                        "endOffsets": "711"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\ikuma\\Documents\\gymlevels\\GymLevels\\app\\src\\main\\res\\values\\colors.xml",
+                    "from": {
+                        "startLines": "1,5,4,2,6,3",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "17,192,149,61,235,105",
+                        "endColumns": "42,41,41,42,40,42",
+                        "endOffsets": "55,229,186,99,271,143"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "55,98,140,182,225,266",
+                        "endColumns": "42,41,41,42,40,42",
+                        "endOffsets": "93,135,177,220,261,304"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "com.gymlevels.app-debug-4:/values_values.arsc.flat",
+            "map": [
+                {
+                    "source": "C:\\Users\\ikuma\\Documents\\gymlevels\\GymLevels\\app\\src\\main\\res\\values\\styles.xml",
+                    "from": {
+                        "startLines": "-1",
+                        "startColumns": "-1",
+                        "startOffsets": "-1"
+                    },
+                    "to": {
+                        "startLines": "9",
+                        "startColumns": "4",
+                        "startOffsets": "368",
+                        "endLines": "15",
+                        "endColumns": "12",
+                        "endOffsets": "770"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\ikuma\\Documents\\gymlevels\\GymLevels\\app\\src\\main\\res\\values\\colors.xml",
+                    "from": {
+                        "startLines": "-1,-1,-1,-1,-1,-1,7",
+                        "startColumns": "-1,-1,-1,-1,-1,-1,4",
+                        "startOffsets": "-1,-1,-1,-1,-1,-1,275",
+                        "endColumns": "-1,-1,-1,-1,-1,-1,58",
+                        "endOffsets": "-1,-1,-1,-1,-1,-1,329"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "55,98,140,182,225,266,309",
+                        "endColumns": "42,41,41,42,40,42,58",
+                        "endOffsets": "93,135,177,220,261,304,363"
+                    }
+                }
+            ]
+        }
+    ]
+}

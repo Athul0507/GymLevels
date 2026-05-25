@@ -5,4 +5,5 @@
     <color name="gl_lime">#B7FF2A</color>
     <color name="gl_cyan">#30D5FF</color>
     <color name="gl_red">#FF3B5C</color>
+    <color name="launcher_icon_background">#020707</color>
 </resources>

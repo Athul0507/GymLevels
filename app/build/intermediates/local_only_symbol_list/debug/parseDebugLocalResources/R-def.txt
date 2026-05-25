@@ -1,0 +1,13 @@
+R_DEF: Internal format may change without notice
+local
+color gl_black
+color gl_cyan
+color gl_lime
+color gl_panel
+color gl_red
+color gl_white
+color launcher_icon_background
+drawable ic_launcher_foreground
+mipmap ic_launcher
+mipmap ic_launcher_round
+style AppTheme

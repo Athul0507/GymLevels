@@ -1,4 +1,4 @@
-# GymLevels
+z# GymLevels
 
 GymLevels is a local-first Android gym progress tracker for beginners. It stores everything on the device with no login, no server, and no external database.
 
@@ -26,7 +26,7 @@ This workspace shell does not currently expose Java, Gradle, or the Android SDK,
 Edit `app/src/main/assets/config.json` before building the app. Example:
 
 ```json
-{
+{        
   "name": "Bench Press",
   "day": "Monday",
   "sets": 3,
